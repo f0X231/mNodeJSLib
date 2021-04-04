@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All the memes!</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+    <header>
+        <h1 class="center">Top trending memes today</h1>
+    </header>
+    <main>
+        <div class="container"></div>
+    </main>
+    
+    <script src="app.js"></script>
+    <script>
+        // https://www.freecodecamp.org/news/progressive-web-apps-102-building-a-progressive-web-app-from-scratch-397b72168040/
+        async function fetchTrending() {
+            const res = await fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=25`);
+            const json = await res.json();
+
+            main.innerHTML = json.data.map(createMeme).join('\n');
+        }
+
+        window.addEventListener('load', async e => {
+            await fetchTrending();
+
+            if ('serviceWorker' in navigator) {
+                try {
+                    navigator.serviceWorker.register('serviceWorker.js');
+                    console.log('SW registered');
+
+                } catch (error) {
+                    console.log('SW failed');
+
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
